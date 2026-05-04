@@ -103,7 +103,7 @@ def long_content():
 
 # ================= RELATED POSTS =================
 def related(current):
-    items = random.sample([k for k in keywords if k != current], 4)
+    items = random.sample([k for k in keywords if k != current], 6)
 
     html = "<h5 class='fw-bold my-3'>Related Posts</h5><div class='row'>"
 
@@ -113,8 +113,8 @@ def related(current):
         img = f"https://tse1.mm.bing.net/th?q={i}&w=400"
 
         html += f"""
-        <div class='col-md-6 mb-3'>
-            <div class='card h-100 shadow-sm'>
+        <div class='col-md-4 mb-3'>
+            <div class='card post h-100 shadow-none'>
                 <a href='{url}'>
                     <img src='{img}' class='card-img-top'>
                 </a>
@@ -194,7 +194,14 @@ Supported by <a class='text-danger fw-bold text-decoration-none' href='https://a
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script type='text/javascript' src='https://adsterrah.github.io/banner/socialbar.js'></script>
-<script type='text/javascript' src='{BASE_URL}/script.js'></script>
+<script type='text/javascript'>
+// Set the overflow property on the body element to prevent scrolling
+document.body.style.overflow = "hidden";
+// Use a timer to enable scrolling after 5 seconds
+setTimeout(function () {
+    document.body.style.overflow = "auto";
+}, 3000); // 3000 milliseconds = 3 seconds
+</script>
 </body>
 </html>
 """
@@ -211,7 +218,7 @@ for kw in selected:
     html += f"""
 <div class="container mt-4">
 
-<div class="ads text-center p-3 my-3">
+<div class="text-center p-3 my-3">
     <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
 </div>
 
@@ -225,30 +232,33 @@ for kw in selected:
 <a href="https://indonesiya.com" target="_blank">
     <img alt="{title}" title="{title}" src="{image}" class="w-100 img-fluid rounded mb-3">
 </a>
+<p class="text-center text-black-50">
+    <small>{title}</small>
+</p>
 
 <!-- ad -->
-<div class="ads text-center p-3 mb-3">
+<div class="text-center p-3 mb-3">
     <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
 </div>
 
-<h3 class="fw-bold">Introduction</h3>
+<h3 class="fw-bold my-4">Introduction</h3>
 {long_content()}
 
-<h3 class="fw-bold">Why {kw.title()} Matters</h3>
+<h3 class="fw-bold my-4">Why {kw.title()} Matters</h3>
 {long_content()}
 
 <!-- ad -->
-<div class="ads text-center p-3 my-3">
+<div class="text-center p-3 my-3">
     <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
 </div>
 
-<h3 class="fw-bold">Ideas & Inspiration</h3>
+<h3 class="fw-bold my-4">Ideas & Inspiration</h3>
 {long_content()}
 
-<h3 class="fw-bold">Best Tips for {kw.title()}</h3>
+<h3 class="fw-bold my-4">Best Tips for {kw.title()}</h3>
 {long_content()}
 
-<h2>Conclusion</h2>
+<h3 class="fw-bold my-4">Conclusion</h3>
 <p>
 In conclusion, {kw} is one of the most popular interior design topics today.
 By combining good lighting, proper layout, and creative decoration ideas,
@@ -256,7 +266,7 @@ you can create a more comfortable and visually appealing space.
 </p>
 
 <!-- ad -->
-<div class="ads text-center p-3 my-3">
+<div class="text-center p-3 my-3">
     <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
 </div>
 
@@ -283,7 +293,7 @@ you can create a more comfortable and visually appealing space.
 </div>
 
 <!-- CATEGORIES -->
-<div class="card mb-3">
+<div class="card mb-4">
 <div class="card-body bg-light rounded">
 <h5>Categories</h5>
 <ul>
@@ -300,7 +310,7 @@ you can create a more comfortable and visually appealing space.
 </div>
 
 <!-- POPULAR POSTS -->
-<div class="card mb-3">
+<div class="card mb-4">
 <div class="card-body bg-light rounded">
 <h5>Popular Posts</h5>
 <ul>
@@ -319,26 +329,40 @@ you can create a more comfortable and visually appealing space.
 
 
 <!-- TAG CLOUD -->
-<div class="card mb-3">
+<div class="card mb-4">
 <div class="card-body bg-light rounded">
 <h5>Tags</h5>
-    <span class="badge bg-dark"><a href="{BASE_URL}/modern">Modern</a></span>
-    <span class="badge bg-secondary"><a href="{BASE_URL}/minimalist">Minimalist</a></span>
-    <span class="badge bg-dark"><a href="{BASE_URL}/luxury">Luxury</a></span>
-    <span class="badge bg-secondary"><a href="{BASE_URL}/small-space">Small Space</a></span>
-    <span class="badge bg-dark"><a href="{BASE_URL}/boho">Boho</a></span>
-    <span class="badge bg-secondary"><a href="{BASE_URL}/diy">DIY</a></span>
+    <span class="badge bg-dark">
+        <a class="text-white" target="_blank" href="{BASE_URL}/modern">Modern</a>
+    </span>
+    <span class="badge bg-secondary">
+        <a class="text-white" target="_blank" href="{BASE_URL}/minimalist">Minimalist</a>
+    </span>
+    <span class="badge bg-dark">
+        <a class="text-white" target="_blank" href="{BASE_URL}/luxury">Luxury</a>
+    </span>
+    <span class="badge bg-secondary">
+        <a class="text-white" target="_blank" href="{BASE_URL}/small-space">Small Space</a>
+    </span>
+    <span class="badge bg-dark">
+        <a class="text-white" target="_blank" href="{BASE_URL}/boho">Boho</a>
+    </span>
+    <span class="badge bg-secondary">
+        <a class="text-white" target="_blank" href="{BASE_URL}/diy">DIY</a>
+    </span>
 </div>
 </div>
 
 
 <!-- NEWSLETTER -->
-<div class="card mb-3">
+<div class="card mb-4">
 <div class="card-body bg-light rounded">
 <h5>Newsletter</h5>
 <p>Get daily decor inspiration.</p>
 <input type="email" class="form-control mb-2" placeholder="Your email">
-<button class="btn btn-primary btn-sm w-100"><a href="https://aridjaya.com">Subscribe</a></button>
+<a class="text-white" target="_blank" href="https://aridjaya.com">
+    <button class="btn btn-success btn-sm w-100 text-white">Subscribe</button>
+</a>
 </div>
 </div>
 
@@ -370,7 +394,7 @@ for p in posts[:40]:
 
     home += f"""
     <div class="col-md-3 mb-4">
-        <div class="card h-100 shadow-sm">
+        <div class="card post h-100 shadow-sm">
             <a href="posts/{p}">
                 <img src="{img}" class="card-img-top">
             </a>

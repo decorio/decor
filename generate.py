@@ -116,7 +116,7 @@ def related(current):
         <div class='col-md-4 mb-3'>
             <div class='card post h-100 shadow-none'>
                 <a href='{url}'>
-                    <img src='{img}' class='card-img-top'>
+                    <img src='{img}' class='card-img-top' loading="lazy">
                 </a>
                 <div class='card-body'>
                     <a href='{url}' class='text-dark text-decoration-none'>
@@ -231,7 +231,7 @@ for kw in selected:
 <h1 class="post-title fw-bold pb-4 mb-4">{title}</h1>
 
 <a href="https://indonesiya.com" target="_blank">
-    <img alt="{title}" title="{title}" src="{image}" class="w-100 img-fluid rounded mb-3">
+    <img alt="{title}" title="{title}" src="{image}" loading="lazy" class="w-100 img-fluid rounded mb-3">
 </a>
 <p class="text-center text-black-50">
     <small>{title}</small>
@@ -403,7 +403,7 @@ for p in posts[:40]:
     <div class="col-md-3 mb-4">
         <div class="card post h-100 shadow-sm">
             <a href="posts/{p}">
-                <img src="{img}" class="card-img-top">
+                <img src="{img}" class="card-img-top" loading="lazy">
             </a>
             <div class="card-body">
                 <a href="posts/{p}" class="text-dark text-decoration-none">

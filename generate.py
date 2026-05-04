@@ -441,6 +441,29 @@ sitemap.append("</urlset>")
 
 open("sitemap.xml", "w").write("\n".join(sitemap))
 
+# ================= IMAGE SITEMAP =================
+image_sitemap = [
+    "<?xml version='1.0' encoding='UTF-8'?>",
+    "<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9' "
+    "xmlns:image='http://www.google.com/schemas/sitemap-image/1.1'>"
+]
+
+for p in posts:
+    slug = p.replace(".html", "").replace("-", " ")
+    image_url = "https://tse1.mm.bing.net/th?q=" + slug.replace(" ", "%20") + "&w=800"
+
+    image_sitemap.append("<url>")
+    image_sitemap.append(f"<loc>{BASE_URL}/posts/{p}</loc>")
+    image_sitemap.append("<image:image>")
+    image_sitemap.append(f"<image:loc>{image_url}</image:loc>")
+    image_sitemap.append(f"<image:title>{slug}</image:title>")
+    image_sitemap.append("</image:image>")
+    image_sitemap.append("</url>")
+
+image_sitemap.append("</urlset>")
+
+open("sitemap-images.xml", "w").write("\n".join(image_sitemap))
+
 # ================= RSS =================
 rss = [
 "<?xml version='1.0' encoding='UTF-8'?>",

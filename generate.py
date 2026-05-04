@@ -138,6 +138,11 @@ def get_site_title():
     return "Aridjaya"
 
 def build_header(title):
+    site_title = get_site_title()
+
+    # auto image fallback
+    og_image = f"{BASE_URL}/og-default.jpg"
+
     return f"""
 <!DOCTYPE html>
 <html lang="en">
@@ -145,8 +150,21 @@ def build_header(title):
 <meta charset="UTF-8">
 <meta content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no' name='viewport'/>
 
-<title>{get_site_title()}</title>
-<meta name="description" content="{title} ideas">
+<title>{title} | {site_title}</title>
+<meta name="description" content="{title} ideas and inspiration for modern home decor.">
+
+<!-- OG META -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="{title} | {site_title}">
+<meta property="og:description" content="{title} ideas and inspiration for modern interior design.">
+<meta property="og:url" content="{BASE_URL}">
+<meta property="og:image" content="{og_image}">
+
+<!-- TWITTER CARD -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title} | {site_title}">
+<meta name="twitter:description" content="{title} ideas and inspiration for modern home decor.">
+<meta name="twitter:image" content="{og_image}">
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="{BASE_URL}/style.css" rel="stylesheet">

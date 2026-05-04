@@ -1,0 +1,189 @@
+name: Auto Generate SEO Site
+
+on:
+  schedule:
+    - cron: '0 2 * * *'   # tiap hari
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Generate Site
+        shell: python
+        run: |
+          import os, random, urllib.request
+          from datetime import datetime, timedelta
+
+          # ================= CONFIG =================
+          BATCH_SIZE = 40
+          KEYWORD_URL = "https://roomdecorideas.github.io/keyword/keyword.txt"
+
+          # ================= LOAD =================
+          domain = open("domain.txt").read().strip()
+
+          with urllib.request.urlopen(KEYWORD_URL) as r:
+              keywords = [k.strip() for k in r.read().decode().splitlines() if k.strip()]
+
+          os.makedirs("posts", exist_ok=True)
+
+          # ================= STATE =================
+          STATE_FILE = "last_index.txt"
+          start = 0
+
+          if os.path.exists(STATE_FILE):
+              start = int(open(STATE_FILE).read().strip())
+
+          end = start + BATCH_SIZE
+          selected = keywords[start:end]
+
+          with open(STATE_FILE, "w") as f:
+              f.write(str(end))
+
+          # ================= CONTENT DATA =================
+          INTRO = [
+              "Designing your home can be both exciting and rewarding.",
+              "Creating a beautiful living space starts with the right ideas.",
+              "A well-designed room can completely change your mood."
+          ]
+
+          BODY = [
+              "Choosing the right colors sets the tone of the space.",
+              "Furniture placement should balance comfort and function.",
+              "Lighting plays a crucial role in atmosphere.",
+              "Textures add depth and personality.",
+              "Small details can make a big impact."
+          ]
+
+          TIPS = [
+              "Use natural lighting",
+              "Keep the design simple",
+              "Add greenery",
+              "Use neutral colors",
+              "Mix textures"
+          ]
+
+          def paragraphs():
+              html = ""
+              for _ in range(random.randint(5, 9)):
+                  html += "<p>" + " ".join(random.sample(BODY, k=3)) + "</p>\n"
+              return html
+
+          def internal_links(current):
+              others = random.sample([k for k in keywords if k != current], 3)
+              html = "<h3>Related Ideas</h3><ul>"
+              for o in others:
+                  slug = o.lower().replace(" ", "-")
+                  html += f'<li><a href="{slug}.html">{o.title()}</a></li>'
+              html += "</ul>"
+              return html
+
+          # ================= GENERATE HTML =================
+          for kw in selected:
+              slug = kw.lower().replace(" ", "-")
+              title = f"{kw.title()} Ideas for a Stylish Home"
+
+              image = f"https://tse1.mm.bing.net/th?q={kw.replace(' ','%20')}&w=800&h=1200"
+
+              html = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{title}</title>
+<meta name="description" content="{kw} ideas and inspiration">
+</head>
+<body>
+
+<h1>{title}</h1>
+
+<img src="{image}" style="max-width:100%"/>
+
+<p>{random.choice(INTRO)}</p>
+
+<h2>Why {kw.title()} Matters</h2>
+{paragraphs()}
+
+<h2>Best Tips</h2>
+<ul>
+{''.join(f"<li>{t}</li>" for t in random.sample(TIPS,3))}
+</ul>
+
+<h2>Step Guide</h2>
+<ol>
+{''.join(f"<li>{t}</li>" for t in random.sample(TIPS,3))}
+</ol>
+
+{internal_links(kw)}
+
+</body>
+</html>
+"""
+              with open(f"posts/{slug}.html","w") as f:
+                  f.write(html)
+
+          # ================= HOMEPAGE =================
+          posts = os.listdir("posts")
+          random.shuffle(posts)
+
+          links = ""
+          for p in posts[:50]:
+              title = p.replace(".html","").replace("-"," ").title()
+              links += f'<li><a href="posts/{p}">{title}</a></li>'
+
+          index_html = f"""<html><body>
+<h1>Home Decor Ideas</h1>
+<ul>{links}</ul>
+</body></html>"""
+
+          open("index.html","w").write(index_html)
+
+          # ================= SITEMAP =================
+          urls = []
+
+          for p in posts:
+              urls.append(f"https://{domain}/posts/{p}")
+
+          sitemap = ['<?xml version="1.0" encoding="UTF-8"?>']
+          sitemap.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+
+          for u in urls:
+              sitemap.append(f"<url><loc>{u}</loc><lastmod>{datetime.utcnow().date()}</lastmod></url>")
+
+          sitemap.append("</urlset>")
+
+          open("sitemap.xml","w").write("\n".join(sitemap))
+
+          # ================= RSS =================
+          rss = ['<?xml version="1.0"?>','<rss version="2.0"><channel>']
+          rss.append(f"<title>Decor Ideas</title>")
+          rss.append(f"<link>https://{domain}</link>")
+
+          for p in posts[:20]:
+              title = p.replace(".html","").replace("-"," ").title()
+              link = f"https://{domain}/posts/{p}"
+              rss.append(f"<item><title>{title}</title><link>{link}</link></item>")
+
+          rss.append("</channel></rss>")
+
+          open("feed.xml","w").write("\n".join(rss))
+
+          print(f"✅ Generated {len(selected)} new pages")
+
+      - name: Commit & Push
+        run: |
+          git config --global user.name "bot"
+          git config --global user.email "bot@users.noreply.github.com"
+          git add .
+          git commit -m "auto generate content" || echo "no changes"
+          git push

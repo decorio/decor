@@ -10,6 +10,8 @@ def get_base_url():
 
 BASE_URL = get_base_url()
 
+print("BASE_URL =", BASE_URL)
+
 # ================= CONFIG =================
 BATCH_SIZE = 12
 
@@ -97,7 +99,7 @@ def paragraph():
     return "<p>" + sentence + "</p>"
 
 def long_content():
-    return "".join(paragraph() for _ in range(random.randint(6, 10)))
+    return "".join(paragraph() for _ in range(random.randint(3, 6)))
 
 # ================= RELATED POSTS =================
 def related(current):
@@ -154,23 +156,23 @@ def build_header(title):
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg border-bottom bg-light">
+<nav class="navbar navbar-expand-lg border-bottom bg-light sticky-top">
 <div class="container">
 
-<a class="navbar-brand fw-bold text-danger fs-2" href="{BASE_URL}/index.html">{get_site_title()}</a>
+<a class="navbar-brand fw-bold text-danger text-uppercase fs-4" href="{BASE_URL}/index.html">{get_site_title()}</a>
 
 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
-<span class="navbar-toggler-icon"></span>
+    <span class="navbar-toggler-icon"></span>
 </button>
 
 <div class="collapse navbar-collapse" id="nav">
 
 <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="{BASE_URL}/index.html">Home</a></li>
-<li class="nav-item"><a class="nav-link" href="#">About</a></li>
-<li class="nav-item"><a class="nav-link" href="#">Privacy</a></li>
-<li class="nav-item"><a class="nav-link" href="https://aridjaya.com" target='_blank'>Partner</a></li>
-<li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+    <li class="nav-item"><a class="nav-link" href="{BASE_URL}/index.html">Home</a></li>
+    <li class="nav-item"><a class="nav-link" href="{BASE_URL}/about.html">About</a></li>
+    <li class="nav-item"><a class="nav-link" href="{BASE_URL}/privacy.html">Privacy</a></li>
+    <li class="nav-item"><a class="nav-link" href="https://aridjaya.com" target='_blank'>Partner</a></li>
+    <li class="nav-item"><a class="nav-link" href="{BASE_URL}/contact.html">Contact</a></li>
 </ul>
 
 <form class="d-flex">
@@ -186,13 +188,13 @@ def build_header(title):
 # ================= FOOTER =================
 def build_footer():
     return """
-<footer class="bg-light text-center p-3 mt-4 border-top">
+<footer class="bg-dark text-white text-center p-3 mt-4 border-top">
 Supported by <a class='text-danger fw-bold text-decoration-none' href='https://aridjaya.com/'>Aridjaya</a>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script type='text/javascript' src='https://adsterrah.github.io/banner/socialbar.js'></script>
-<script type='text/javascript' src='./script.js'></script>
+<script type='text/javascript' src='{BASE_URL}/script.js'></script>
 </body>
 </html>
 """
@@ -218,18 +220,21 @@ for kw in selected:
 <!-- MAIN CONTENT -->
 <div class="col-md-8">
 
-<h1 class="fw-bold mb-4">{title}</h1>
+<h1 class="post-title fw-bold pb-4 mb-4">{title}</h1>
 
-<img alt="{title}" src="{image}" class="w-100 img-fluid rounded mb-3">
+<a href="https://indonesiya.com" target="_blank">
+    <img alt="{title}" title="{title}" src="{image}" class="w-100 img-fluid rounded mb-3">
+</a>
 
+<!-- ad -->
 <div class="ads text-center p-3 mb-3">
     <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
 </div>
 
-<h2>Introduction</h2>
+<h3 class="fw-bold">Introduction</h3>
 {long_content()}
 
-<h2>Why {kw.title()} Matters</h2>
+<h3 class="fw-bold">Why {kw.title()} Matters</h3>
 {long_content()}
 
 <!-- ad -->
@@ -237,10 +242,10 @@ for kw in selected:
     <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
 </div>
 
-<h2>Ideas & Inspiration</h2>
+<h3 class="fw-bold">Ideas & Inspiration</h3>
 {long_content()}
 
-<h2>Best Tips for {kw.title()}</h2>
+<h3 class="fw-bold">Best Tips for {kw.title()}</h3>
 {long_content()}
 
 <h2>Conclusion</h2>
@@ -250,6 +255,10 @@ By combining good lighting, proper layout, and creative decoration ideas,
 you can create a more comfortable and visually appealing space.
 </p>
 
+<!-- ad -->
+<div class="ads text-center p-3 my-3">
+    <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
+</div>
 
 <!-- RELATED -->
 {related(kw)}
@@ -264,6 +273,12 @@ you can create a more comfortable and visually appealing space.
 <div class="card-body bg-light rounded">
 <h5>About</h5>
 <p>Modern home decor ideas & inspiration blog for stylish living spaces, small apartments, and aesthetic interiors.</p>
+
+<!-- ADS 1 -->
+<div class="ads text-center my-4">
+    <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
+</div>
+
 </div>
 </div>
 
@@ -271,32 +286,15 @@ you can create a more comfortable and visually appealing space.
 <div class="card mb-3">
 <div class="card-body bg-light rounded">
 <h5>Categories</h5>
-<ul class="list-unstyled">
-<li>Living Room</li>
-<li>Bedroom</li>
-<li>Kitchen</li>
-<li>Bathroom</li>
-<li>Apartment</li>
-<li>Minimalist</li>
-</ul>
-</div>
-</div>
-
-<!-- ADS 1 -->
-<div class="ads text-center p-3 mb-3">
-<script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
-</div>
-
-<!-- TRENDING TOPICS -->
-<div class="card mb-3">
-<div class="card-body bg-light rounded">
-<h5>Trending Topics</h5>
-<ul class="list-unstyled">
-<li>Modern Interior Design</li>
-<li>Small Space Ideas</li>
-<li>Minimalist Home Setup</li>
-<li>Luxury Room Styling</li>
-<li>Cozy Apartment Design</li>
+<ul>
+    <li><a href="{BASE_URL}/living-room">Living Room</a></li>
+    <li><a href="{BASE_URL}/bedroom">Bedroom</a></li>
+    <li><a href="{BASE_URL}/kitchen">Kitchen</a></li>
+    <li><a href="{BASE_URL}/bathroom">Bathroom</a></li>
+    <li><a href="{BASE_URL}/apartment">Apartment</a></li>
+    <li><a href="{BASE_URL}/minimalist">Minimalist</a></li>
+    <li><a href="{BASE_URL}/hotel">Hotel</a></li>
+    <li><a href="{BASE_URL}/design">Design</a></li>
 </ul>
 </div>
 </div>
@@ -305,14 +303,34 @@ you can create a more comfortable and visually appealing space.
 <div class="card mb-3">
 <div class="card-body bg-light rounded">
 <h5>Popular Posts</h5>
-<ul class="list-unstyled">
-<li>Modern Living Room Ideas</li>
-<li>Bedroom Aesthetic Setup</li>
-<li>Kitchen Organization Tips</li>
-<li>Small Apartment Hacks</li>
+<ul>
+    <li><a href="{BASE_URL}/modern-kiving-room-ideas">Modern Living Room Ideas</a></li>
+    <li><a href="{BASE_URL}/bedroom-aesthetic-setup">Bedroom Aesthetic Setup</a></li>
+    <li><a href="{BASE_URL}/kitchen-organization-tips">Kitchen Organization Tips</a></li>
+    <li><a href="{BASE_URL}/small-apartment-hacks">Small Apartment Hacks</a></li>
+    <li><a href="{BASE_URL}/modern-interior-design">Modern Interior Design</a></li>
+    <li><a href="{BASE_URL}/small-space-ideas">Small Space Ideas</a></li>
+    <li><a href="{BASE_URL}/minimalist-home-setup">Minimalist Home Setup</a></li>
+    <li><a href="{BASE_URL}/luxury-room-styling">Luxury Room Styling</a></li>
+    <li><a href="{BASE_URL}/cozy-apartment-design">Cozy Apartment Design</a></li>
 </ul>
 </div>
 </div>
+
+
+<!-- TAG CLOUD -->
+<div class="card mb-3">
+<div class="card-body bg-light rounded">
+<h5>Tags</h5>
+    <span class="badge bg-dark"><a href="{BASE_URL}/modern">Modern</a></span>
+    <span class="badge bg-secondary"><a href="{BASE_URL}/minimalist">Minimalist</a></span>
+    <span class="badge bg-dark"><a href="{BASE_URL}/luxury">Luxury</a></span>
+    <span class="badge bg-secondary"><a href="{BASE_URL}/small-space">Small Space</a></span>
+    <span class="badge bg-dark"><a href="{BASE_URL}/boho">Boho</a></span>
+    <span class="badge bg-secondary"><a href="{BASE_URL}/diy">DIY</a></span>
+</div>
+</div>
+
 
 <!-- NEWSLETTER -->
 <div class="card mb-3">
@@ -320,27 +338,11 @@ you can create a more comfortable and visually appealing space.
 <h5>Newsletter</h5>
 <p>Get daily decor inspiration.</p>
 <input type="email" class="form-control mb-2" placeholder="Your email">
-<button class="btn btn-primary btn-sm w-100">Subscribe</button>
+<button class="btn btn-primary btn-sm w-100"><a href="https://aridjaya.com">Subscribe</a></button>
 </div>
 </div>
 
-<!-- ADS 2 -->
-<div class="ads text-center p-3 mb-3">
-<script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
-</div>
 
-<!-- TAG CLOUD -->
-<div class="card mb-3">
-<div class="card-body">
-<h5>Tags</h5>
-<span class="badge bg-dark">Modern</span>
-<span class="badge bg-secondary">Minimalist</span>
-<span class="badge bg-dark">Luxury</span>
-<span class="badge bg-secondary">Small Space</span>
-<span class="badge bg-dark">Boho</span>
-<span class="badge bg-secondary">DIY</span>
-</div>
-</div>
 
 </div>
 

@@ -10,22 +10,32 @@ body {
 }
 
 .card:hover {
-    {
-    transform: translateY(-5px);
-    transition: 0.3s;
-  }
+  transform: translateY(-5px);
+  transition: 0.3s;
 }
 
 .ads {
-    {
-    background: #f1f1f1;
-    text-align: center;
-    padding: 20px;
-    margin: 20px 0;
-  }
+
+  background: #f1f1f1;
+  text-align: center;
+  padding: 20px;
+  margin: 20px 0;
+
 }
 
 h1,
 h2 {
   margin-top: 20px;
+}
+
+.post-title {
+  border-bottom: 12px dotted #eee;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+a:hover {
+  text-decoration: none !important;
 }

@@ -31,8 +31,8 @@ jobs:
 
           domain = open("domain.txt").read().strip()
 
-          with urllib.request.urlopen(KEYWORD_URL) as r:
-              keywords = [k.strip() for k in r.read().decode().splitlines() if k.strip()]
+          with open("keyword.txt") as f:
+            keywords = [k.strip() for k in f.readlines() if k.strip()]
 
           os.makedirs("posts", exist_ok=True)
 

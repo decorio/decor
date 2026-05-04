@@ -79,13 +79,14 @@ def build_header(title):
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no' name='viewport'/>
 
 <title>{title}</title>
 <meta name="description" content="{title} ideas">
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="{BASE_URL}/style.css" rel="stylesheet">
+<script type='text/javascript' src='https://adsterrah.github.io/banner/popunder.js'></script>
 </head>
 
 <body>
@@ -124,11 +125,11 @@ def build_header(title):
 def build_footer():
     return """
 <footer class="bg-light text-center p-3 mt-4">
-© 2026 Decor Blog
+Supported by <a class='text-danger' href='https://aridjaya.com/'>Aridjaya</a>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+<script type='text/javascript' src='https://adsterrah.github.io/banner/socialbar.js'></script>
 </body>
 </html>
 """
@@ -145,7 +146,9 @@ for kw in selected:
     html += f"""
 <div class="container mt-4">
 
-<div class="ads text-center p-3 bg-light my-3">ADVERTISEMENT</div>
+<div class="ads text-center p-3 my-3">
+    <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
+</div>
 
 <div class="row">
 
@@ -156,29 +159,35 @@ for kw in selected:
 
 <img src="{image}" class="w-100 img-fluid rounded mb-3">
 
-<div class="ads text-center p-3 bg-light mb-3">ADVERTISEMENT</div>
+<div class="ads text-center p-3 bg-light mb-3">
+    <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
+</div>
 
 {long_content()}
 
 <h2>Ideas & Inspiration</h2>
 {long_content()}
 
-<div class="ads text-center p-3 bg-light my-3">ADVERTISEMENT</div>
+<div class="ads text-center p-3 my-3">
+    <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
+</div>
 
 {related(kw)}
 
 </div>
 
-<!-- SIDEBAR (CONSISTENT) -->
+<!-- SIDEBAR (CONSISTENT + RICH) -->
 <div class="col-md-4">
 
+<!-- ABOUT -->
 <div class="card mb-3">
 <div class="card-body">
 <h5>About</h5>
-<p>Modern home decor ideas & inspiration blog.</p>
+<p>Modern home decor ideas & inspiration blog for stylish living spaces, small apartments, and aesthetic interiors.</p>
 </div>
 </div>
 
+<!-- CATEGORIES -->
 <div class="card mb-3">
 <div class="card-body">
 <h5>Categories</h5>
@@ -187,22 +196,71 @@ for kw in selected:
 <li>Bedroom</li>
 <li>Kitchen</li>
 <li>Bathroom</li>
+<li>Apartment</li>
+<li>Minimalist</li>
 </ul>
 </div>
 </div>
 
+<!-- ADS 1 -->
+<div class="ads text-center p-3 mb-3">
+<script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
+</div>
+
+<!-- TRENDING TOPICS -->
 <div class="card mb-3">
 <div class="card-body">
-<h5>Popular</h5>
+<h5>Trending Topics</h5>
 <ul class="list-unstyled">
-<li>Modern Design</li>
-<li>Minimalist Home</li>
+<li>Modern Interior Design</li>
 <li>Small Space Ideas</li>
+<li>Minimalist Home Setup</li>
+<li>Luxury Room Styling</li>
+<li>Cozy Apartment Design</li>
 </ul>
 </div>
 </div>
 
-<div class="ads text-center p-3 bg-light">ADVERTISEMENT</div>
+<!-- POPULAR POSTS -->
+<div class="card mb-3">
+<div class="card-body">
+<h5>Popular Posts</h5>
+<ul class="list-unstyled">
+<li>Modern Living Room Ideas</li>
+<li>Bedroom Aesthetic Setup</li>
+<li>Kitchen Organization Tips</li>
+<li>Small Apartment Hacks</li>
+</ul>
+</div>
+</div>
+
+<!-- NEWSLETTER -->
+<div class="card mb-3">
+<div class="card-body">
+<h5>Newsletter</h5>
+<p>Get daily decor inspiration.</p>
+<input type="email" class="form-control mb-2" placeholder="Your email">
+<button class="btn btn-primary btn-sm w-100">Subscribe</button>
+</div>
+</div>
+
+<!-- ADS 2 -->
+<div class="ads text-center p-3 mb-3">
+<script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
+</div>
+
+<!-- TAG CLOUD -->
+<div class="card mb-3">
+<div class="card-body">
+<h5>Tags</h5>
+<span class="badge bg-dark">Modern</span>
+<span class="badge bg-secondary">Minimalist</span>
+<span class="badge bg-dark">Luxury</span>
+<span class="badge bg-secondary">Small Space</span>
+<span class="badge bg-dark">Boho</span>
+<span class="badge bg-secondary">DIY</span>
+</div>
+</div>
 
 </div>
 
@@ -220,7 +278,7 @@ posts = sorted(os.listdir("posts"), reverse=True)
 def get_site_title():
     if os.path.exists("title.txt"):
         return open("title.txt").read().strip()
-    return "Decor Blog"
+    return "Aridjaya"
 
 home = build_header(get_site_title())
 
@@ -251,7 +309,7 @@ for p in posts[:40]:
 home += """
 </div>
 
-<div class="ads text-center p-3 bg-light">ADVERTISEMENT</div>
+<!-- ad here -->
 
 </div>
 """
@@ -279,7 +337,7 @@ open("sitemap.xml", "w").write("\n".join(sitemap))
 rss = [
 "<?xml version='1.0' encoding='UTF-8'?>",
 "<rss version='2.0'><channel>",
-"<title>Decor Blog</title>",
+f"<title>{get_site_title()}</title>",
 f"<link>{BASE_URL}</link>",
 "<description>Home decor inspiration</description>"
 ]

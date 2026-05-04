@@ -27,7 +27,7 @@ jobs:
           from datetime import datetime
 
           BATCH_SIZE = 40
-          KEYWORD_URL = "https://roomdecorideas.github.io/keyword/keyword.txt"
+          KEYWORD_URL = "https://decorio.github.io/decor/keyword.txt"
 
           domain = open("domain.txt").read().strip()
 
@@ -73,18 +73,25 @@ jobs:
           def paragraphs():
               html = ""
               for _ in range(random.randint(5, 9)):
-                  html += "<p>" + " ".join(random.sample(BODY, 3)) + "</p>\n"
+                  html += "<p>" + " ".join(random.sample(BODY, 3)) + "</p>"
               return html
 
           def internal_links(current):
               others = random.sample([k for k in keywords if k != current], 3)
-              html = "<h3>Related Ideas</h3><ul>"
+              html = "<h3>Related Ideas</h3><div class='row'>"
               for o in others:
                   slug = o.lower().replace(" ", "-")
-                  html += "<li><a href='" + slug + ".html'>" + o.title() + "</a></li>"
-              html += "</ul>"
+                  img = "https://tse1.mm.bing.net/th?q=" + o.replace(" ", "%20") + "&w=400"
+                  html += "<div class='col-md-4 mb-3'>"
+                  html += "<div class='card'>"
+                  html += "<img src='" + img + "' class='card-img-top'>"
+                  html += "<div class='card-body'>"
+                  html += "<a href='" + slug + ".html'>" + o.title() + "</a>"
+                  html += "</div></div></div>"
+              html += "</div>"
               return html
 
+          # ========= GENERATE POSTS =========
           for kw in selected:
               slug = kw.lower().replace(" ", "-")
               title = kw.title() + " Ideas for a Stylish Home"
@@ -92,75 +99,94 @@ jobs:
 
               tips_html = ""
               for t in random.sample(TIPS, 3):
-                  tips_html += "<li>" + t + "</li>"
+                  tips_html += "<li class='list-group-item'>" + t + "</li>"
 
               steps_html = ""
               for t in random.sample(TIPS, 3):
-                  steps_html += "<li>" + t + "</li>"
+                  steps_html += "<li class='list-group-item'>" + t + "</li>"
 
-              html_parts = []
-              html_parts.append("<!DOCTYPE html>")
-              html_parts.append("<html>")
-              html_parts.append("<head>")
-              html_parts.append("<meta charset='UTF-8'>")
-              html_parts.append("<title>" + title + "</title>")
-              html_parts.append("<meta name='description' content='" + kw + " ideas and inspiration'>")
-              html_parts.append("</head>")
-              html_parts.append("<body>")
+              html = "<!DOCTYPE html><html lang='en'><head>"
+              html += "<meta charset='UTF-8'>"
+              html += "<meta name='viewport' content='width=device-width, initial-scale=1'>"
+              html += "<title>" + title + "</title>"
+              html += "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' rel='stylesheet'>"
+              html += "</head><body>"
 
-              html_parts.append("<h1>" + title + "</h1>")
-              html_parts.append("<img src='" + image + "' style='max-width:100%'/>")
-              html_parts.append("<p>" + random.choice(INTRO) + "</p>")
+              html += "<nav class='navbar navbar-dark bg-dark'><div class='container'>"
+              html += "<a class='navbar-brand' href='../index.html'>Decor Blog</a>"
+              html += "</div></nav>"
 
-              html_parts.append("<h2>Why " + kw.title() + " Matters</h2>")
-              html_parts.append(paragraphs())
+              html += "<div class='container mt-4'>"
+              html += "<h1 class='mb-3'>" + title + "</h1>"
+              html += "<img src='" + image + "' class='img-fluid rounded mb-3'>"
+              html += "<p>" + random.choice(INTRO) + "</p>"
 
-              html_parts.append("<h2>Best Tips</h2>")
-              html_parts.append("<ul>" + tips_html + "</ul>")
+              html += "<h2>Why " + kw.title() + " Matters</h2>"
+              html += paragraphs()
 
-              html_parts.append("<h2>Step Guide</h2>")
-              html_parts.append("<ol>" + steps_html + "</ol>")
+              html += "<h2>Best Tips</h2>"
+              html += "<ul class='list-group mb-3'>" + tips_html + "</ul>"
 
-              html_parts.append(internal_links(kw))
+              html += "<h2>Step Guide</h2>"
+              html += "<ol class='list-group list-group-numbered mb-3'>" + steps_html + "</ol>"
 
-              html_parts.append("</body>")
-              html_parts.append("</html>")
+              html += internal_links(kw)
 
-              html = "\n".join(html_parts)
+              html += "</div>"
+              html += "<footer class='bg-dark text-white text-center p-3 mt-4'>© 2026 Decor Blog</footer>"
+              html += "</body></html>"
 
               with open("posts/" + slug + ".html", "w", encoding="utf-8") as f:
                   f.write(html)
 
+          # ========= HOMEPAGE =========
           posts = os.listdir("posts")
           random.shuffle(posts)
 
-          links = ""
+          index = "<!DOCTYPE html><html><head>"
+          index += "<meta charset='UTF-8'>"
+          index += "<meta name='viewport' content='width=device-width, initial-scale=1'>"
+          index += "<title>Decor Blog</title>"
+          index += "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' rel='stylesheet'>"
+          index += "</head><body>"
+
+          index += "<nav class='navbar navbar-dark bg-dark'><div class='container'>"
+          index += "<a class='navbar-brand'>Decor Blog</a></div></nav>"
+
+          index += "<div class='container mt-4'><div class='row'>"
+
           for p in posts[:50]:
               title = p.replace(".html","").replace("-"," ").title()
-              links += "<li><a href='posts/" + p + "'>" + title + "</a></li>"
+              img = "https://tse1.mm.bing.net/th?q=" + title.replace(" ","%20") + "&w=400"
+              index += "<div class='col-md-4 mb-4'>"
+              index += "<div class='card h-100'>"
+              index += "<img src='" + img + "' class='card-img-top'>"
+              index += "<div class='card-body'>"
+              index += "<h5>" + title + "</h5>"
+              index += "<a href='posts/" + p + "' class='btn btn-primary btn-sm'>Read More</a>"
+              index += "</div></div></div>"
 
-          index_html = "<html><body><h1>Home Decor Ideas</h1><ul>" + links + "</ul></body></html>"
-          open("index.html","w",encoding="utf-8").write(index_html)
+          index += "</div></div>"
+          index += "<footer class='bg-dark text-white text-center p-3 mt-4'>© 2026 Decor Blog</footer>"
+          index += "</body></html>"
 
-          sitemap = ['<?xml version="1.0" encoding="UTF-8"?>']
-          sitemap.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+          open("index.html","w",encoding="utf-8").write(index)
 
+          # ========= SITEMAP =========
+          sitemap = ['<?xml version="1.0"?>','<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
           for p in posts:
-              url = "https://" + domain + "/posts/" + p
-              sitemap.append("<url><loc>" + url + "</loc><lastmod>" + str(datetime.utcnow().date()) + "</lastmod></url>")
-
+              sitemap.append("<url><loc>https://" + domain + "/posts/" + p + "</loc></url>")
           sitemap.append("</urlset>")
           open("sitemap.xml","w").write("\n".join(sitemap))
 
+          # ========= RSS =========
           rss = ['<?xml version="1.0"?>','<rss version="2.0"><channel>']
-          rss.append("<title>Decor Ideas</title>")
+          rss.append("<title>Decor Blog</title>")
           rss.append("<link>https://" + domain + "</link>")
-
           for p in posts[:20]:
               title = p.replace(".html","").replace("-"," ").title()
               link = "https://" + domain + "/posts/" + p
               rss.append("<item><title>" + title + "</title><link>" + link + "</link></item>")
-
           rss.append("</channel></rss>")
           open("feed.xml","w").write("\n".join(rss))
 

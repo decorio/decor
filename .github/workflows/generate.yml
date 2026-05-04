@@ -27,7 +27,6 @@ jobs:
           from datetime import datetime
 
           BATCH_SIZE = 40
-          KEYWORD_URL = "https://decorio.github.io/decor/keyword.txt"
 
           domain = open("domain.txt").read().strip()
 

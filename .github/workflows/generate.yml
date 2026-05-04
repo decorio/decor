@@ -51,147 +51,176 @@ jobs:
         run: |
           import os, random
 
-          BATCH_SIZE = 40
+BATCH_SIZE = 12
 
-          domain = open("domain.txt").read().strip()
-          keywords = [k.strip() for k in open("keyword.txt").readlines() if k.strip()]
+domain = open("domain.txt").read().strip()
+keywords = [k.strip() for k in open("keyword.txt").readlines() if k.strip()]
 
-          os.makedirs("posts", exist_ok=True)
+os.makedirs("posts", exist_ok=True)
 
-          start = 0
-          if os.path.exists("last_index.txt"):
-              start = int(open("last_index.txt").read().strip())
+start = 0
+if os.path.exists("last_index.txt"):
+    start = int(open("last_index.txt").read().strip())
 
-          end = start + BATCH_SIZE
-          selected = keywords[start:end]
+end = start + BATCH_SIZE
+selected = keywords[start:end]
 
-          open("last_index.txt","w").write(str(end))
+open("last_index.txt","w").write(str(end))
 
-          def paragraph():
-              base = [
-                  "Choosing the right colors sets the mood of your room.",
-                  "Lighting plays an important role in interior design.",
-                  "Furniture placement should balance style and comfort.",
-                  "Textures can add depth and personality.",
-                  "Small details can create a big impact."
-              ]
-              return "<p>" + " ".join(random.sample(base,3)) + "</p>"
+def paragraph():
+    base = [
+        "Choosing the right colors sets the mood of your room.",
+        "Lighting plays an important role in interior design.",
+        "Furniture placement should balance style and comfort.",
+        "Textures can add depth and personality.",
+        "Small details can create a big impact.",
+        "Combining different materials can elevate your design.",
+        "A well-planned layout improves both aesthetics and function."
+    ]
+    return "<p>" + " ".join(random.sample(base,4)) + "</p>"
 
-          def related(current):
-              items = random.sample([k for k in keywords if k != current], 3)
-              html = "<h3>Related Posts</h3><ul>"
-              for i in items:
-                  slug = i.replace(" ","-")
-                  html += "<li><a href='" + slug + ".html'>" + i.title() + "</a></li>"
-              html += "</ul>"
-              return html
+def long_content():
+    html = ""
+    for _ in range(random.randint(6,10)):
+        html += paragraph()
+    return html
 
-          # ===== GENERATE POSTS =====
-          for kw in selected:
-              slug = kw.replace(" ","-")
-              title = kw.title()
+def related(current):
+    items = random.sample([k for k in keywords if k != current], 4)
+    html = "<h3 class='mt-4'>Related Posts</h3><div class='row'>"
+    for i in items:
+        slug = i.replace(" ","-")
+        img = "https://tse1.mm.bing.net/th?q=" + i + "&w=400"
+        html += "<div class='col-md-6 mb-3'>"
+        html += "<div class='card'>"
+        html += "<a href='" + slug + ".html'>"
+        html += "<img src='" + img + "' class='card-img-top'>"
+        html += "</a>"
+        html += "<div class='card-body'>"
+        html += "<a href='" + slug + ".html'><b>" + i.title() + "</b></a>"
+        html += "</div></div></div>"
+    html += "</div>"
+    return html
 
-              html = ""
-              html += "<!DOCTYPE html><html><head>"
-              html += "<meta charset='UTF-8'>"
-              html += "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-              html += "<title>" + title + "</title>"
-              html += "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' rel='stylesheet'>"
-              html += "<link href='../style.css' rel='stylesheet'>"
-              html += "</head><body>"
+# ===== GENERATE POSTS =====
+for kw in selected:
+    slug = kw.replace(" ","-")
+    title = kw.title()
+    image = "https://tse1.mm.bing.net/th?q=" + kw + "&w=800"
 
-              html += "<nav class='navbar navbar-dark bg-dark'><div class='container'>"
-              html += "<a class='navbar-brand' href='../index.html'>Decor Blog</a>"
-              html += "</div></nav>"
+    html = ""
+    html += "<!DOCTYPE html><html><head>"
+    html += "<meta charset='UTF-8'>"
+    html += "<meta name='viewport' content='width=device-width, initial-scale=1'>"
+    html += "<title>" + title + "</title>"
+    html += "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' rel='stylesheet'>"
+    html += "<link href='../style.css' rel='stylesheet'>"
+    html += "</head><body>"
 
-              html += "<div class='container mt-4'><div class='row'>"
+    html += "<nav class='navbar navbar-dark bg-dark'><div class='container'>"
+    html += "<a class='navbar-brand' href='../index.html'>Decor Blog</a>"
+    html += "</div></nav>"
 
-              html += "<div class='col-md-8'>"
-              html += "<h1>" + title + "</h1>"
+    html += "<div class='container mt-4'><div class='row'>"
 
-              html += "<div class='ads'>ADS SPACE</div>"
+    # MAIN CONTENT
+    html += "<div class='col-md-8'>"
+    html += "<h1>" + title + "</h1>"
 
-              html += "<img src='https://tse1.mm.bing.net/th?q=" + kw + "&w=800' class='img-fluid mb-3'>"
+    html += "<img src='" + image + "' class='img-fluid rounded mb-3'>"
 
-              html += paragraph()
-              html += paragraph()
+    html += long_content()
 
-              html += "<h2>Tips</h2><ul>"
-              html += "<li>Use natural lighting</li>"
-              html += "<li>Keep design simple</li>"
-              html += "<li>Add plants</li>"
-              html += "</ul>"
+    html += "<div class='ads'>ADS SPACE</div>"
 
-              html += "<div class='ads'>ADS SPACE</div>"
+    html += "<h2>Best Tips</h2>"
+    html += long_content()
 
-              html += "<h2>Guide</h2>"
-              html += paragraph()
-              html += paragraph()
+    html += "<h2>Design Guide</h2>"
+    html += long_content()
 
-              html += related(kw)
+    html += related(kw)
 
-              html += "<div class='ads'>ADS SPACE</div>"
+    html += "</div>"
 
-              html += "</div>"
+    # SIDEBAR
+    html += "<div class='col-md-4'>"
 
-              html += "<div class='col-md-4'>"
-              html += "<h4>Popular</h4>"
-              html += "<ul><li>Home Decor</li><li>Modern</li><li>Small Space</li></ul>"
-              html += "<div class='ads'>ADS SPACE</div>"
-              html += "</div>"
+    html += "<div class='card mb-3'><div class='card-body'>"
+    html += "<h5>About</h5>"
+    html += "<p>Find the best home decor inspiration and ideas for every space.</p>"
+    html += "</div></div>"
 
-              html += "</div></div>"
+    html += "<div class='card mb-3'><div class='card-body'>"
+    html += "<h5>Popular Topics</h5>"
+    html += "<ul>"
+    html += "<li>Living Room</li>"
+    html += "<li>Bedroom Ideas</li>"
+    html += "<li>Kitchen Decor</li>"
+    html += "<li>Small Space</li>"
+    html += "</ul></div></div>"
 
-              html += "<footer class='bg-dark text-white text-center p-3 mt-4'>© 2026 Decor Blog</footer>"
-              html += "</body></html>"
+    html += "<div class='ads'>ADS SPACE</div>"
 
-              open("posts/" + slug + ".html","w").write(html)
+    html += "</div>"
 
-          # ===== HOMEPAGE =====
-          posts = os.listdir("posts")
-          random.shuffle(posts)
+    html += "</div></div>"
 
-          index = ""
-          index += "<!DOCTYPE html><html><head>"
-          index += "<meta charset='UTF-8'>"
-          index += "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-          index += "<title>Decor Blog</title>"
-          index += "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' rel='stylesheet'>"
-          index += "<link href='style.css' rel='stylesheet'>"
-          index += "</head><body>"
+    html += "<footer class='bg-dark text-white text-center p-3 mt-4'>© 2026 Decor Blog</footer>"
+    html += "</body></html>"
 
-          index += "<nav class='navbar navbar-dark bg-dark'><div class='container'>"
-          index += "<a class='navbar-brand'>Decor Blog</a></div></nav>"
+    open("posts/" + slug + ".html","w").write(html)
 
-          index += "<div class='container mt-4'><div class='row'>"
+# ===== HOMEPAGE =====
+posts = os.listdir("posts")
+random.shuffle(posts)
 
-          for p in posts[:30]:
-              t = p.replace(".html","").replace("-"," ").title()
-              index += "<div class='col-md-4 mb-4'>"
-              index += "<div class='card'>"
-              index += "<img src='https://tse1.mm.bing.net/th?q=" + t + "&w=400' class='card-img-top'>"
-              index += "<div class='card-body'>"
-              index += "<h5>" + t + "</h5>"
-              index += "<a href='posts/" + p + "' class='btn btn-primary btn-sm'>Read</a>"
-              index += "</div></div></div>"
+index = ""
+index += "<!DOCTYPE html><html><head>"
+index += "<meta charset='UTF-8'>"
+index += "<meta name='viewport' content='width=device-width, initial-scale=1'>"
+index += "<title>Decor Blog</title>"
+index += "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' rel='stylesheet'>"
+index += "<link href='style.css' rel='stylesheet'>"
+index += "</head><body>"
 
-          index += "</div>"
-          index += "<div class='ads'>ADS SPACE</div>"
-          index += "</div>"
+index += "<nav class='navbar navbar-dark bg-dark'><div class='container'>"
+index += "<a class='navbar-brand'>Decor Blog</a></div></nav>"
 
-          index += "<footer class='bg-dark text-white text-center p-3 mt-4'>© 2026 Decor Blog</footer>"
-          index += "</body></html>"
+index += "<div class='container mt-4'><div class='row'>"
 
-          open("index.html","w").write(index)
+for p in posts[:40]:
+    t = p.replace(".html","").replace("-"," ").title()
+    img = "https://tse1.mm.bing.net/th?q=" + t + "&w=400"
 
-          # ===== SITEMAP =====
-          sitemap = ["<?xml version='1.0'?>","<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>"]
-          for p in posts:
-              sitemap.append("<url><loc>https://" + domain + "/posts/" + p + "</loc></url>")
-          sitemap.append("</urlset>")
-          open("sitemap.xml","w").write("\n".join(sitemap))
+    index += "<div class='col-md-3 mb-4'>"
+    index += "<div class='card h-100'>"
+    index += "<a href='posts/" + p + "'>"
+    index += "<img src='" + img + "' class='card-img-top'>"
+    index += "</a>"
+    index += "<div class='card-body'>"
+    index += "<a href='posts/" + p + "'><h6>" + t + "</h6></a>"
+    index += "</div></div></div>"
 
-          print("Generated:", len(selected), "posts")
+index += "</div>"
+
+index += "<div class='ads text-center'>ADS SPACE</div>"
+
+index += "</div>"
+
+index += "<footer class='bg-dark text-white text-center p-3 mt-4'>© 2026 Decor Blog</footer>"
+index += "</body></html>"
+
+open("index.html","w").write(index)
+
+# ===== SITEMAP =====
+sitemap = ["<?xml version='1.0'?>","<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>"]
+for p in posts:
+    sitemap.append("<url><loc>https://" + domain + "/posts/" + p + "</loc></url>")
+sitemap.append("</urlset>")
+open("sitemap.xml","w").write("\n".join(sitemap))
+
+print("Generated:", len(selected), "posts")
 
       - name: Commit & Push
         run: |

@@ -218,6 +218,7 @@ for kw in selected:
     html += f"""
 <div class="container mt-4">
 
+<!-- ad1 -->
 <div class="text-center p-3 my-3">
     <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
 </div>
@@ -236,9 +237,9 @@ for kw in selected:
     <small>{title}</small>
 </p>
 
-<!-- ad -->
+<!-- ad2 -->
 <div class="text-center p-3 mb-3">
-    <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
+    <script type='text/javascript' src='https://adsterrah.github.io/banner/ad2.js'></script>
 </div>
 
 <h3 class="fw-bold my-4">Introduction</h3>
@@ -247,9 +248,9 @@ for kw in selected:
 <h3 class="fw-bold my-4">Why {kw.title()} Matters</h3>
 {long_content()}
 
-<!-- ad -->
+<!-- ad3 -->
 <div class="text-center p-3 my-3">
-    <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
+    <script type='text/javascript' src='https://adsterrah.github.io/banner/ad3.js'></script>
 </div>
 
 <h3 class="fw-bold my-4">Ideas & Inspiration</h3>
@@ -265,7 +266,7 @@ By combining good lighting, proper layout, and creative decoration ideas,
 you can create a more comfortable and visually appealing space.
 </p>
 
-<!-- ad -->
+<!-- ad1 -->
 <div class="text-center p-3 my-3">
     <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
 </div>
@@ -284,9 +285,9 @@ you can create a more comfortable and visually appealing space.
 <h5>About</h5>
 <p>Modern home decor ideas & inspiration blog for stylish living spaces, small apartments, and aesthetic interiors.</p>
 
-<!-- ADS 1 -->
-<div class="ads text-center my-4">
-    <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
+<!-- ad2 -->
+<div class="text-center my-4">
+    <script type='text/javascript' src='https://adsterrah.github.io/banner/ad2.js'></script>
 </div>
 
 </div>
@@ -385,6 +386,12 @@ home = build_header(get_site_title())
 
 home += """
 <div class="container mt-4">
+
+<!-- ad1 -->
+<div class="text-center p-3 my-3">
+    <script type='text/javascript' src='https://adsterrah.github.io/banner/ad1.js'></script>
+</div>
+
 <div class="row">
 """
 
@@ -410,7 +417,7 @@ for p in posts[:40]:
 home += """
 </div>
 
-<!-- ad here -->
+<!-- ad -->
 
 </div>
 """

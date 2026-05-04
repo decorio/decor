@@ -47,7 +47,7 @@ def long_content():
 def related(current):
     items = random.sample([k for k in keywords if k != current], 4)
 
-    html = "<h3 class='mt-4'>Related Posts</h3><div class='row'>"
+    html = "<h5 class='fw-bold mt-4'>Related Posts</h5><div class='row'>"
 
     for i in items:
         slug = i.replace(" ", "-")
@@ -91,10 +91,10 @@ def build_header(title):
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg border-bottom bg-light">
 <div class="container">
 
-<a class="navbar-brand" href="{BASE_URL}/index.html">Decor Blog</a>
+<a class="navbar-brand" href="{BASE_URL}/index.html">{title}</a>
 
 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
 <span class="navbar-toggler-icon"></span>
@@ -112,7 +112,6 @@ def build_header(title):
 
 <form class="d-flex">
 <input class="form-control me-2" placeholder="Search...">
-<button class="btn btn-outline-light">Search</button>
 </form>
 
 </div>
@@ -124,7 +123,7 @@ def build_header(title):
 # ================= FOOTER =================
 def build_footer():
     return """
-<footer class="bg-dark text-white text-center p-3 mt-4">
+<footer class="bg-light text-center p-3 mt-4">
 © 2026 Decor Blog
 </footer>
 
@@ -139,21 +138,23 @@ for kw in selected:
     slug = kw.replace(" ", "-")
     title = kw.title()
     url = f"{BASE_URL}/posts/{slug}.html"
-    image = f"https://tse1.mm.bing.net/th?q={kw}&w=800"
+    image = f"https://tse1.mm.bing.net/th?q={kw}"
 
     html = build_header(title)
 
     html += f"""
 <div class="container mt-4">
 
+<div class="ads text-center p-3 bg-light my-3">ADVERTISEMENT</div>
+
 <div class="row">
 
 <!-- MAIN CONTENT -->
 <div class="col-md-8">
 
-<h1>{title}</h1>
+<h1 class="fw-bold my-4">{title}</h1>
 
-<img src="{image}" class="img-fluid rounded mb-3">
+<img src="{image}" class="w-100 img-fluid rounded mb-3">
 
 <div class="ads text-center p-3 bg-light mb-3">ADVERTISEMENT</div>
 
@@ -240,7 +241,7 @@ for p in posts[:40]:
             </a>
             <div class="card-body">
                 <a href="posts/{p}" class="text-dark text-decoration-none">
-                    <h6>{t}</h6>
+                    <h6 class="fw-bold">{t}</h6>
                 </a>
             </div>
         </div>

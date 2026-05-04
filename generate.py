@@ -141,7 +141,7 @@ def build_header(title):
     site_title = get_site_title()
 
     # auto image fallback
-    og_image = f"{BASE_URL}/og-default.jpg"
+    og_image = f"https://tse1.mm.bing.net/th?q={title}&w=1200"
 
     return f"""
 <!DOCTYPE html>
@@ -157,7 +157,7 @@ def build_header(title):
 <meta property="og:type" content="article">
 <meta property="og:title" content="{title} | {site_title}">
 <meta property="og:description" content="{title} ideas and inspiration for modern interior design.">
-<meta property="og:url" content="{BASE_URL}">
+<meta property="og:url" content="{BASE_URL}/posts/{slug}.html">
 <meta property="og:image" content="{og_image}">
 
 <!-- TWITTER CARD -->

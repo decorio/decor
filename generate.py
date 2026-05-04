@@ -141,7 +141,7 @@ def build_header(title):
     site_title = get_site_title()
 
     # auto image fallback
-    og_image = f"https://tse1.mm.bing.net/th?q={title}&w=1200"
+    og_image = f"https://tse1.mm.bing.net/th?q={title}"
 
     return f"""
 <!DOCTYPE html>
@@ -446,41 +446,54 @@ open("index.html", "w", encoding="utf-8").write(home)
 
 # ================= SITEMAP =================
 sitemap = [
-"<?xml version='1.0' encoding='UTF-8'?>",
-"<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>"
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
 ]
 
 for p in posts:
-    sitemap.append(
-        f"<url><loc>{BASE_URL}/posts/{p}</loc><lastmod>{datetime.utcnow().date()}</lastmod></url>"
-    )
+    url = f"{BASE_URL}/posts/{p}"
+
+    sitemap.append("<url>")
+    sitemap.append(f"<loc>{url}</loc>")
+    sitemap.append(f"<lastmod>{datetime.utcnow().date()}</lastmod>")
+    sitemap.append("<changefreq>weekly</changefreq>")
+    sitemap.append("<priority>0.8</priority>")
+    sitemap.append("</url>")
 
 sitemap.append("</urlset>")
 
-open("sitemap.xml", "w").write("\n".join(sitemap))
+open("sitemap.xml", "w", encoding="utf-8").write("\n".join(sitemap))
+
 
 # ================= IMAGE SITEMAP =================
+import urllib.parse
+from xml.sax.saxutils import escape
+
 image_sitemap = [
-    "<?xml version='1.0' encoding='UTF-8'?>",
-    "<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9' "
-    "xmlns:image='http://www.google.com/schemas/sitemap-image/1.1'>"
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+    'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">'
 ]
 
 for p in posts:
-    slug = p.replace(".html", "").replace("-", " ")
-    image_url = "https://tse1.mm.bing.net/th?q=" + slug.replace(" ", "%20") + "&w=800"
+    title = p.replace(".html", "").replace("-", " ").title()
+
+    page_url = f"{BASE_URL}/posts/{p}"
+    image_url = "https://tse1.mm.bing.net/th?q=" + urllib.parse.quote(title)
 
     image_sitemap.append("<url>")
-    image_sitemap.append(f"<loc>{BASE_URL}/posts/{p}</loc>")
+    image_sitemap.append(f"<loc>{escape(page_url)}</loc>")
+
     image_sitemap.append("<image:image>")
-    image_sitemap.append(f"<image:loc>{image_url}</image:loc>")
-    image_sitemap.append(f"<image:title>{slug}</image:title>")
+    image_sitemap.append(f"<image:loc>{escape(image_url)}</image:loc>")
+    image_sitemap.append(f"<image:title>{escape(title)}</image:title>")
     image_sitemap.append("</image:image>")
+
     image_sitemap.append("</url>")
 
 image_sitemap.append("</urlset>")
 
-open("sitemap-images.xml", "w").write("\n".join(image_sitemap))
+open("sitemap-images.xml", "w", encoding="utf-8").write("\n".join(image_sitemap))
 
 # ================= RSS =================
 rss = [

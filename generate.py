@@ -135,8 +135,6 @@ def get_site_title():
         return open("title.txt").read().strip()
     return "Aridjaya"
 
-home = build_header(get_site_title())
-
 def build_header(title):
     return f"""
 <!DOCTYPE html>
@@ -356,6 +354,8 @@ you can create a more comfortable and visually appealing space.
 
 # ================= HOMEPAGE =================
 posts = sorted(os.listdir("posts"), reverse=True)
+
+home = build_header(get_site_title())
 
 home += """
 <div class="container mt-4">

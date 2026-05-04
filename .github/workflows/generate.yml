@@ -26,11 +26,9 @@ jobs:
           import os, random, urllib.request
           from datetime import datetime
 
-          # ========= CONFIG =========
           BATCH_SIZE = 40
           KEYWORD_URL = "https://roomdecorideas.github.io/keyword/keyword.txt"
 
-          # ========= LOAD =========
           domain = open("domain.txt").read().strip()
 
           with urllib.request.urlopen(KEYWORD_URL) as r:
@@ -38,7 +36,6 @@ jobs:
 
           os.makedirs("posts", exist_ok=True)
 
-          # ========= STATE =========
           STATE_FILE = "last_index.txt"
           start = 0
 
@@ -51,7 +48,6 @@ jobs:
           with open(STATE_FILE, "w") as f:
               f.write(str(end))
 
-          # ========= CONTENT =========
           INTRO = [
               "Designing your home can be both exciting and rewarding.",
               "Creating a beautiful living space starts with the right ideas.",
@@ -89,14 +85,11 @@ jobs:
               html += "</ul>"
               return html
 
-          # ========= GENERATE HTML =========
           for kw in selected:
               slug = kw.lower().replace(" ", "-")
               title = kw.title() + " Ideas for a Stylish Home"
-
               image = "https://tse1.mm.bing.net/th?q=" + kw.replace(" ", "%20") + "&w=800&h=1200"
 
-              # SAFE LIST BUILD
               tips_html = ""
               for t in random.sample(TIPS, 3):
                   tips_html += "<li>" + t + "</li>"
@@ -105,44 +98,39 @@ jobs:
               for t in random.sample(TIPS, 3):
                   steps_html += "<li>" + t + "</li>"
 
-              html = """<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>""" + title + """</title>
-<meta name="description" content='""" + kw + """ ideas and inspiration'>
-</head>
-<body>
+              html_parts = []
+              html_parts.append("<!DOCTYPE html>")
+              html_parts.append("<html>")
+              html_parts.append("<head>")
+              html_parts.append("<meta charset='UTF-8'>")
+              html_parts.append("<title>" + title + "</title>")
+              html_parts.append("<meta name='description' content='" + kw + " ideas and inspiration'>")
+              html_parts.append("</head>")
+              html_parts.append("<body>")
 
-<h1>""" + title + """</h1>
+              html_parts.append("<h1>" + title + "</h1>")
+              html_parts.append("<img src='" + image + "' style='max-width:100%'/>")
+              html_parts.append("<p>" + random.choice(INTRO) + "</p>")
 
-<img src='""" + image + """' style="max-width:100%"/>
+              html_parts.append("<h2>Why " + kw.title() + " Matters</h2>")
+              html_parts.append(paragraphs())
 
-<p>""" + random.choice(INTRO) + """</p>
+              html_parts.append("<h2>Best Tips</h2>")
+              html_parts.append("<ul>" + tips_html + "</ul>")
 
-<h2>Why """ + kw.title() + """ Matters</h2>
-""" + paragraphs() + """
+              html_parts.append("<h2>Step Guide</h2>")
+              html_parts.append("<ol>" + steps_html + "</ol>")
 
-<h2>Best Tips</h2>
-<ul>
-""" + tips_html + """
-</ul>
+              html_parts.append(internal_links(kw))
 
-<h2>Step Guide</h2>
-<ol>
-""" + steps_html + """
-</ol>
+              html_parts.append("</body>")
+              html_parts.append("</html>")
 
-""" + internal_links(kw) + """
-
-</body>
-</html>
-"""
+              html = "\n".join(html_parts)
 
               with open("posts/" + slug + ".html", "w", encoding="utf-8") as f:
                   f.write(html)
 
-          # ========= HOMEPAGE =========
           posts = os.listdir("posts")
           random.shuffle(posts)
 
@@ -151,14 +139,9 @@ jobs:
               title = p.replace(".html","").replace("-"," ").title()
               links += "<li><a href='posts/" + p + "'>" + title + "</a></li>"
 
-          index_html = """<html><body>
-<h1>Home Decor Ideas</h1>
-<ul>""" + links + """</ul>
-</body></html>"""
-
+          index_html = "<html><body><h1>Home Decor Ideas</h1><ul>" + links + "</ul></body></html>"
           open("index.html","w",encoding="utf-8").write(index_html)
 
-          # ========= SITEMAP =========
           sitemap = ['<?xml version="1.0" encoding="UTF-8"?>']
           sitemap.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
 
@@ -169,7 +152,6 @@ jobs:
           sitemap.append("</urlset>")
           open("sitemap.xml","w").write("\n".join(sitemap))
 
-          # ========= RSS =========
           rss = ['<?xml version="1.0"?>','<rss version="2.0"><channel>']
           rss.append("<title>Decor Ideas</title>")
           rss.append("<link>https://" + domain + "</link>")
@@ -182,7 +164,7 @@ jobs:
           rss.append("</channel></rss>")
           open("feed.xml","w").write("\n".join(rss))
 
-          print("✅ Generated", len(selected), "pages")
+          print("Generated", len(selected), "pages")
 
       - name: Commit & Push
         run: |

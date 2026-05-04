@@ -216,7 +216,12 @@ for kw in selected:
 # ================= HOMEPAGE =================
 posts = sorted(os.listdir("posts"), reverse=True)
 
-home = build_header("Decor Blog")
+def get_site_title():
+    if os.path.exists("title.txt"):
+        return open("title.txt").read().strip()
+    return "Decor Blog"
+
+home = build_header(get_site_title())
 
 home += """
 <div class="container mt-4">
@@ -283,7 +288,7 @@ for p in posts[:30]:
     link = f"{BASE_URL}/posts/{p}"
 
     rss.append("<item>")
-    rss.append(f"<title>{title}</title>")
+    rss.append(f"<title>{get_site_title()}</title>")
     rss.append(f"<link>{link}</link>")
     rss.append("</item>")
 

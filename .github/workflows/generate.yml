@@ -2,7 +2,7 @@ name: Auto Generate SEO Site
 
 on:
   schedule:
-    - cron: '0 2 * * *'   # tiap hari
+    - cron: '0 2 * * *'
   workflow_dispatch:
 
 jobs:
@@ -24,13 +24,13 @@ jobs:
         shell: python
         run: |
           import os, random, urllib.request
-          from datetime import datetime, timedelta
+          from datetime import datetime
 
-          # ================= CONFIG =================
+          # ========= CONFIG =========
           BATCH_SIZE = 40
           KEYWORD_URL = "https://roomdecorideas.github.io/keyword/keyword.txt"
 
-          # ================= LOAD =================
+          # ========= LOAD =========
           domain = open("domain.txt").read().strip()
 
           with urllib.request.urlopen(KEYWORD_URL) as r:
@@ -38,7 +38,7 @@ jobs:
 
           os.makedirs("posts", exist_ok=True)
 
-          # ================= STATE =================
+          # ========= STATE =========
           STATE_FILE = "last_index.txt"
           start = 0
 
@@ -51,7 +51,7 @@ jobs:
           with open(STATE_FILE, "w") as f:
               f.write(str(end))
 
-          # ================= CONTENT DATA =================
+          # ========= CONTENT =========
           INTRO = [
               "Designing your home can be both exciting and rewarding.",
               "Creating a beautiful living space starts with the right ideas.",
@@ -77,7 +77,7 @@ jobs:
           def paragraphs():
               html = ""
               for _ in range(random.randint(5, 9)):
-                  html += "<p>" + " ".join(random.sample(BODY, k=3)) + "</p>\n"
+                  html += "<p>" + " ".join(random.sample(BODY, 3)) + "</p>\n"
               return html
 
           def internal_links(current):
@@ -85,100 +85,104 @@ jobs:
               html = "<h3>Related Ideas</h3><ul>"
               for o in others:
                   slug = o.lower().replace(" ", "-")
-                  html += f'<li><a href="{slug}.html">{o.title()}</a></li>'
+                  html += "<li><a href='" + slug + ".html'>" + o.title() + "</a></li>"
               html += "</ul>"
               return html
 
-          # ================= GENERATE HTML =================
+          # ========= GENERATE HTML =========
           for kw in selected:
               slug = kw.lower().replace(" ", "-")
-              title = f"{kw.title()} Ideas for a Stylish Home"
+              title = kw.title() + " Ideas for a Stylish Home"
 
-              image = f"https://tse1.mm.bing.net/th?q={kw.replace(' ','%20')}&w=800&h=1200"
+              image = "https://tse1.mm.bing.net/th?q=" + kw.replace(" ", "%20") + "&w=800&h=1200"
 
-              html = f"""<!DOCTYPE html>
+              # SAFE LIST BUILD
+              tips_html = ""
+              for t in random.sample(TIPS, 3):
+                  tips_html += "<li>" + t + "</li>"
+
+              steps_html = ""
+              for t in random.sample(TIPS, 3):
+                  steps_html += "<li>" + t + "</li>"
+
+              html = """<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>{title}</title>
-<meta name="description" content="{kw} ideas and inspiration">
+<title>""" + title + """</title>
+<meta name="description" content='""" + kw + """ ideas and inspiration'>
 </head>
 <body>
 
-<h1>{title}</h1>
+<h1>""" + title + """</h1>
 
-<img src="{image}" style="max-width:100%"/>
+<img src='""" + image + """' style="max-width:100%"/>
 
-<p>{random.choice(INTRO)}</p>
+<p>""" + random.choice(INTRO) + """</p>
 
-<h2>Why {kw.title()} Matters</h2>
-{paragraphs()}
+<h2>Why """ + kw.title() + """ Matters</h2>
+""" + paragraphs() + """
 
 <h2>Best Tips</h2>
 <ul>
-{''.join(f"<li>{t}</li>" for t in random.sample(TIPS,3))}
+""" + tips_html + """
 </ul>
 
 <h2>Step Guide</h2>
 <ol>
-{''.join(f"<li>{t}</li>" for t in random.sample(TIPS,3))}
+""" + steps_html + """
 </ol>
 
-{internal_links(kw)}
+""" + internal_links(kw) + """
 
 </body>
 </html>
 """
-              with open(f"posts/{slug}.html","w") as f:
+
+              with open("posts/" + slug + ".html", "w", encoding="utf-8") as f:
                   f.write(html)
 
-          # ================= HOMEPAGE =================
+          # ========= HOMEPAGE =========
           posts = os.listdir("posts")
           random.shuffle(posts)
 
           links = ""
           for p in posts[:50]:
               title = p.replace(".html","").replace("-"," ").title()
-              links += f'<li><a href="posts/{p}">{title}</a></li>'
+              links += "<li><a href='posts/" + p + "'>" + title + "</a></li>"
 
-          index_html = f"""<html><body>
+          index_html = """<html><body>
 <h1>Home Decor Ideas</h1>
-<ul>{links}</ul>
+<ul>""" + links + """</ul>
 </body></html>"""
 
-          open("index.html","w").write(index_html)
+          open("index.html","w",encoding="utf-8").write(index_html)
 
-          # ================= SITEMAP =================
-          urls = []
-
-          for p in posts:
-              urls.append(f"https://{domain}/posts/{p}")
-
+          # ========= SITEMAP =========
           sitemap = ['<?xml version="1.0" encoding="UTF-8"?>']
           sitemap.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
 
-          for u in urls:
-              sitemap.append(f"<url><loc>{u}</loc><lastmod>{datetime.utcnow().date()}</lastmod></url>")
+          for p in posts:
+              url = "https://" + domain + "/posts/" + p
+              sitemap.append("<url><loc>" + url + "</loc><lastmod>" + str(datetime.utcnow().date()) + "</lastmod></url>")
 
           sitemap.append("</urlset>")
-
           open("sitemap.xml","w").write("\n".join(sitemap))
 
-          # ================= RSS =================
+          # ========= RSS =========
           rss = ['<?xml version="1.0"?>','<rss version="2.0"><channel>']
-          rss.append(f"<title>Decor Ideas</title>")
-          rss.append(f"<link>https://{domain}</link>")
+          rss.append("<title>Decor Ideas</title>")
+          rss.append("<link>https://" + domain + "</link>")
 
           for p in posts[:20]:
               title = p.replace(".html","").replace("-"," ").title()
-              link = f"https://{domain}/posts/{p}"
-              rss.append(f"<item><title>{title}</title><link>{link}</link></item>")
+              link = "https://" + domain + "/posts/" + p
+              rss.append("<item><title>" + title + "</title><link>" + link + "</link></item>")
 
           rss.append("</channel></rss>")
-
           open("feed.xml","w").write("\n".join(rss))
 
-          print(f"✅ Generated {len(selected)} new pages")
+          print("✅ Generated", len(selected), "pages")
 
       - name: Commit & Push
         run: |
